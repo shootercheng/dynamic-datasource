@@ -229,6 +229,9 @@ public class RoutingDataSourceComponent extends AbstractDataSource implements In
 	protected DataSource determineTargetDataSource() {
 		Assert.notNull(this.resolvedDataSources, "DataSource router not initialized");
 		Object lookupKey = determineCurrentLookupKey();
+		if (lookupKey == null){
+			return (DataSource) defaultTargetDataSource;
+		}
 		DataSource dataSource = this.resolvedDataSources.get(lookupKey);
 		if (dataSource == null && (this.lenientFallback || lookupKey == null)) {
 			dataSource = this.resolvedDefaultDataSource;
