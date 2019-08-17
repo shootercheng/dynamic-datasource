@@ -123,17 +123,17 @@ public class RoutingDataSourceComponent extends AbstractDataSource implements In
 	private DsConfig dsConfig;
 
 	public DataSource getDefaultDataSource(){
-	    DsInfo dsInfo = dsConfig.getDatasource().get("default");
-        return DataSourceBuilder.create().driverClassName(dsInfo.getDriverClassName())
-                                    .url(dsInfo.getJdbcUrl())
-                                    .username(dsInfo.getUsername())
-                                    .password(dsInfo.getPassword()).build();
-    }
+		DsInfo dsInfo = dsConfig.getDatasource().get("default");
+		return DataSourceBuilder.create().driverClassName(dsInfo.getDriverClassName())
+									.url(dsInfo.getJdbcUrl())
+									.username(dsInfo.getUsername())
+									.password(dsInfo.getPassword()).build();
+	}
 
 	@Override
 	public void afterPropertiesSet(){
-	    setDefaultTargetDataSource(getDefaultDataSource());
-	    setTargetDataSources(new HashMap<>());
+		setDefaultTargetDataSource(getDefaultDataSource());
+		setTargetDataSources(new HashMap<>());
 		if (this.targetDataSources == null) {
 			throw new IllegalArgumentException("Property 'targetDataSources' is required");
 		}
@@ -149,14 +149,14 @@ public class RoutingDataSourceComponent extends AbstractDataSource implements In
 	}
 
 	public void addDataSource(String lookUpKey, DataSource dataSource){
-	    if (!resolvedDataSources.containsKey(lookUpKey)){
-	        resolvedDataSources.put(lookUpKey, dataSource);
-        }
-    }
+		if (!resolvedDataSources.containsKey(lookUpKey)){
+			resolvedDataSources.put(lookUpKey, dataSource);
+		}
+	}
 
-    public boolean checkDataSourceExist(String lookUpKey){
-	    return resolvedDataSources.containsKey(lookUpKey);
-    }
+	public boolean checkDataSourceExist(String lookUpKey){
+		return resolvedDataSources.containsKey(lookUpKey);
+	}
 
 	/**
 	 * Resolve the given lookup key object, as specified in the
