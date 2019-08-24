@@ -49,3 +49,14 @@ create table t_test (
 	id  bigint(20) primary key AUTO_INCREMENT,
 	name varchar(50)
 ) charset=utf8mb4;
+
+use test1;
+create table t_task_param (
+	id int primary key auto_increment,
+	param_type varchar(20),
+	param_value varchar(50)
+) charset = utf8mb4;
+
+insert into t_task_param(param_type, param_value) values('timetask','0/20 * * * * ?');
+update t_task_param set param_value = "0/20 * * * * ?" where id = 1;
+update t_task_param set param_value = "0 0/1 * * * ?" where id = 1;
