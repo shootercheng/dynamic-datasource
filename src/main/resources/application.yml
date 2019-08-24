@@ -4,6 +4,9 @@ server:
     servlet:
       context-path: /datasource
 
+logging:
+  level:
+     ROOT: debug
 
 spring:
     datasource:
