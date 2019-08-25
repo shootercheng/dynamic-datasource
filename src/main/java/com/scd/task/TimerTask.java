@@ -1,7 +1,6 @@
 package com.scd.task;
 
 import com.scd.service.DataService;
-import com.scd.service.TaskParamService;
 import com.scd.util.BeanUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +21,7 @@ public class TimerTask extends Thread {
 
     @Override
     public void run(){
-        TaskParamService taskParamService = BeanUtil.getBean(TaskParamService.class);
+//        TaskParamService taskParamService = BeanUtil.getBean(TaskParamService.class);
         DataService dataService = BeanUtil.getBean(DataService.class);
         LOGGER.info("time task execute time {}", LocalDateTime.now().toLocalTime());
         dataService.doHandler();
