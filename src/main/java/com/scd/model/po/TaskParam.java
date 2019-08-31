@@ -7,6 +7,12 @@ public class TaskParam {
 
     private String paramValue;
 
+    public TaskParam(Integer id, String paramType, String paramValue) {
+        this.id = id;
+        this.paramType = paramType;
+        this.paramValue = paramValue;
+    }
+
     public Integer getId() {
         return id;
     }

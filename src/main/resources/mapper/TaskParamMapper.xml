@@ -19,7 +19,7 @@
     delete from t_task_param
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.scd.model.po.TaskParam">
+  <insert id="insert" parameterType="com.scd.model.po.TaskParam" useGeneratedKeys="true" keyProperty="id">
     insert into t_task_param (id, param_type, param_value
       )
     values (#{id,jdbcType=INTEGER}, #{paramType,jdbcType=VARCHAR}, #{paramValue,jdbcType=VARCHAR}
