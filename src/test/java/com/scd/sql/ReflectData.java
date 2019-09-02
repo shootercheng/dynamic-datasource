@@ -1,6 +1,7 @@
 package com.scd.sql;
 
 import com.scd.constant.TypeEnum;
+import com.scd.mapper.UserRoleMapper;
 import com.scd.model.po.TaskParam;
 import com.scd.util.ReflectUtil;
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.Date;
 
 /**
@@ -64,8 +66,17 @@ public class ReflectData {
         return object;
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception {
         VoTest voTest = reflectTestData(VoTest.class);
         System.out.println(voTest);
+        Method[] methods = UserRoleMapper.class.getDeclaredMethods();
+        for (Method method : methods){
+            System.out.println(method.getName());
+            Parameter[] parameters = method.getParameters();
+            for (Parameter parameter : parameters){
+                Class<?> clazz = parameter.getType();
+                clazz.newInstance();
+            }
+        }
     }
 }

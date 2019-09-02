@@ -32,6 +32,7 @@ import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.mapping.StatementType;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.scripting.LanguageDriver;
+import org.apache.ibatis.scripting.xmltags.MixedSqlNode;
 import org.apache.ibatis.session.Configuration;
 
 /**
@@ -95,8 +96,10 @@ public class XMLStatementBuilder extends BaseBuilder {
     }
 
     SqlSource sqlSource = langDriver.createSqlSource(configuration, context, parameterTypeClass);
+    XMLScriptBuilder builder = new XMLScriptBuilder(configuration, context, parameterTypeClass);
+    MixedSqlNode mixedSqlNode = builder.parseDynamicTags(context);
     // 添加解析后的sql source
-    sqlSourceList.add(new SqlResult(id, sqlSource));
+    sqlSourceList.add(new SqlResult(id, databaseId, sqlSource, mixedSqlNode));
     StatementType statementType = StatementType.valueOf(context.getStringAttribute("statementType", StatementType.PREPARED.toString()));
     Integer fetchSize = context.getIntAttribute("fetchSize");
     Integer timeout = context.getIntAttribute("timeout");

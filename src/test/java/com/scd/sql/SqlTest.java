@@ -5,6 +5,7 @@ import com.scd.model.po.TaskParam;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.scripting.defaults.RawSqlSource;
 import org.apache.ibatis.scripting.xmltags.*;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
@@ -107,6 +108,12 @@ public class SqlTest {
                 Object param = null;
                 if (sqlSource instanceof DynamicSqlSource) {
                     param = ReflectData.reflectTestData(mappedStatement.getParameterMap().getType());
+                    mappedStatement.getBoundSql(param).getSql();
+                    System.out.println("dynamicsqlsource");
+                } else if (sqlSource instanceof RawSqlSource){
+                    System.out.println("rawsqlsource");
+                } else {
+                    System.out.println("unknown");
                 }
                 String sql = mappedStatement.getId() + ":" + mappedStatement.getBoundSql(param).getSql();
                 sql = sql.replace("\n", "");
@@ -127,6 +134,8 @@ public class SqlTest {
             List<SqlResult> sqlResultList = builder.getSqlResultList();
             for (SqlResult sqlResult : sqlResultList){
                 System.out.println(sqlResult);
+//                DynamicContext context = new DynamicContext(configuration, null);
+                MixedSqlNode mixedSqlNode = sqlResult.getMixedSqlNode();
             }
         }
     }
