@@ -1,5 +1,6 @@
 package com.scd.util;
 
+import org.springframework.util.Assert;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -14,10 +15,17 @@ public class RequestUtil {
 
     public static HttpServletRequest getHttpRequest(){
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        if (requestAttributes == null) {
+            return null;
+        }
+        HttpServletRequest httpServletRequest = null;
         if (requestAttributes instanceof ServletRequestAttributes){
             ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) requestAttributes;
-            return servletRequestAttributes.getRequest();
+            httpServletRequest = servletRequestAttributes.getRequest();
         }
-        return null;
+        if (httpServletRequest == null) {
+            throw new NullPointerException("http servlet is null");
+        }
+        return httpServletRequest;
     }
 }

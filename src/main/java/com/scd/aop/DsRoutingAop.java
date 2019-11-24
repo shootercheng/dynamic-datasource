@@ -4,13 +4,13 @@ import com.scd.annotation.DataSourceRouting;
 import com.scd.config.DsConfig;
 import com.scd.config.DsInfo;
 import com.scd.config.RoutingDataSourceComponent;
+import com.scd.exception.RouteDsException;
+import com.scd.util.InheritableHeaderValueUtil;
 import com.scd.util.LookUpKeyUtil;
 import com.scd.util.RequestUtil;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +20,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import java.lang.annotation.Annotation;
 import java.sql.Connection;
@@ -67,8 +68,7 @@ public class DsRoutingAop {
             }
         }
         if (dsRouter == null){
-            LOGGER.error("can not find routing annotation");
-            return ;
+            throw new RouteDsException(" find route annotation error ");
         }
         // 解析注解
         String dsname = dsRouter.dsname();
@@ -77,26 +77,22 @@ public class DsRoutingAop {
         // 开始路由
         // 路由信息
         if (StringUtils.isEmpty(dsparam)){
-            LOGGER.error("routing param is empty");
-            return ;
+            throw new RouteDsException("routing param is empty");
         }
         if (StringUtils.isEmpty(dsname)){
-            LOGGER.error("routing dsname is empty");
-            return ;
+            throw new RouteDsException("routing dsname is empty");
         }
         // 获取请求头中的参数
-        String rtParam = RequestUtil.getHttpRequest().getHeader(dsparam);
+        String rtParam = getRequestParam(dsparam);
         if (StringUtils.isEmpty(rtParam)){
-            LOGGER.error("reuqest header routing header is empty");
-            return ;
+            throw new RouteDsException("reuqest header routing header is empty");
         }
-
         Map<String, DsInfo> dsInfoMap = dsConfig.getDatasource();
         DsInfo dsInfo = dsInfoMap.get(dsname);
         String url = dsInfo.getJdbcUrl();
         String template = dsInfo.getTemplate();
         if (StringUtils.isEmpty(template)) {
-            LOGGER.error("template not configed");
+            throw new RouteDsException("datasource template dburl not configed");
         }
         // 替换为路由库名
         String rtkey = ":" + dsparam;
@@ -114,7 +110,25 @@ public class DsRoutingAop {
         } else{
             LookUpKeyUtil.setLookupKey(rtkey);
         }
+    }
 
+    @AfterReturning(value = "routePointcut()", returning = "object")
+    public void doAfterReturn(Object object) {
+        LOGGER.info("execute result is {}",  object);
+        LookUpKeyUtil.removeLookupKey();
+    }
+
+    @AfterThrowing(value = "routePointcut()", throwing = "throwable")
+    public void doAfterThrow(Throwable throwable) {
+        LOGGER.error("datasource route aop error ", throwable);
+    }
+
+    private String getRequestParam(String dsparam) {
+        HttpServletRequest httpServletRequest = RequestUtil.getHttpRequest();
+        if (httpServletRequest == null) {
+           return InheritableHeaderValueUtil.getHeaderMap().get().get(dsparam);
+        }
+        return httpServletRequest.getHeader(dsparam);
     }
 
     private boolean connectDb(DataSource dataSource) {
@@ -125,6 +139,8 @@ public class DsRoutingAop {
             isAlive = true;
         } catch (SQLException e){
             LOGGER.error("Connect Db error, please check config");
+            // 终止这次请求
+            throw new RouteDsException("Connect Db error, please check config", e.getCause());
         } finally {
             if (connection != null){
                 try {

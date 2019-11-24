@@ -20,9 +20,9 @@ import java.time.LocalDateTime;
  * @author chengdu
  * @date 2019/8/24.
  */
-@Component
-@Configuration
-@EnableScheduling
+//@Component
+//@Configuration
+//@EnableScheduling
 public class TimeSchedule implements SchedulingConfigurer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TimeSchedule.class);

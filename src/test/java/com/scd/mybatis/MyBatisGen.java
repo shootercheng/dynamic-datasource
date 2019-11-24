@@ -1,6 +1,7 @@
 package com.scd.mybatis;
 
 import com.scd.util.FileUtil;
+import com.scd.api.ShellRunner;
 import org.apache.ibatis.io.Resources;
 
 import java.io.File;
@@ -22,16 +23,16 @@ public class MyBatisGen {
     private static final String TABLE_TEMPLATE_STR = "<table tableName=\"@@@###TABLE###@@@\" domainObjectName=\"@@@###MODEL###@@@\" enableCountByExample=\"false\" enableUpdateByExample=\"false\" enableDeleteByExample=\"false\" " +
             "enableSelectByExample=\"false\" selectByExampleQueryId=\"false\"></table>";
 
-
-
     private static String[] tables = {
             "t_task_param",
-            "t_test"
+            "t_test",
+            "t_article"
     };
 
     private static String[] models = {
             "TaskParam",
-            "Test"
+            "Test",
+            "Article"
     };
 
 
@@ -58,7 +59,9 @@ public class MyBatisGen {
         String target = "temp";
         FileUtil.makedir(target);
         String filepath = target + File.separator + "mbgeneratorConfig.xml";
-        FileUtil.writeStrtoFile(filepath, template, false);
+//        FileUtil.writeStrtoFile(filepath, template, false);
         System.out.println("create config success ");
+        String[] command = {ShellRunner.CONFIG_FILE, filepath,ShellRunner.OVERWRITE};
+        ShellRunner.genCode(command);
     }
 }

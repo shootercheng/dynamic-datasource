@@ -99,7 +99,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     XMLScriptBuilder builder = new XMLScriptBuilder(configuration, context, parameterTypeClass);
     MixedSqlNode mixedSqlNode = builder.parseDynamicTags(context);
     // 添加解析后的sql source
-    sqlSourceList.add(new SqlResult(id, databaseId, sqlSource, mixedSqlNode));
+    sqlSourceList.add(new SqlResult(id, databaseId, sqlSource, context, mixedSqlNode));
     StatementType statementType = StatementType.valueOf(context.getStringAttribute("statementType", StatementType.PREPARED.toString()));
     Integer fetchSize = context.getIntAttribute("fetchSize");
     Integer timeout = context.getIntAttribute("timeout");

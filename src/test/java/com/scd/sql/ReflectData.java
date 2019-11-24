@@ -75,7 +75,12 @@ public class ReflectData {
             Parameter[] parameters = method.getParameters();
             for (Parameter parameter : parameters){
                 Class<?> clazz = parameter.getType();
-                clazz.newInstance();
+                System.out.println(clazz);
+//                clazz.newInstance();
+            }
+            Class<?>[] classes = method.getParameterTypes();
+            for (Class clazz : classes){
+                System.out.println(clazz);
             }
         }
     }

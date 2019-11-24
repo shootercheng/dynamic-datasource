@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scd.mapper.ArticleMapper">
+  <resultMap id="BaseResultMap" type="com.scd.model.po.Article">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="author" jdbcType="VARCHAR" property="author" />
+    <result column="content" jdbcType="CHAR" property="content" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, title, author, content
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_article
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_article
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.scd.model.po.Article">
+    insert into t_article (id, title, author, 
+      content)
+    values (#{id,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, 
+      #{content,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.scd.model.po.Article">
+    insert into t_article
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="author != null">
+        author,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null">
+        #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.scd.model.po.Article">
+    update t_article
+    <set>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null">
+        author = #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.scd.model.po.Article">
+    update t_article
+    set title = #{title,jdbcType=VARCHAR},
+      author = #{author,jdbcType=VARCHAR},
+      content = #{content,jdbcType=CHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_article;
+  </select>
+  <insert id="insertList" >
+    insert into t_article (title, author,
+      content)
+    values
+    <foreach item="item" index="index" collection="list"
+             open="" separator="," close="">
+      (
+        #{item.title},
+        #{item.author},
+        #{item.content}
+      )
+    </foreach>
+  </insert>
+  <delete id="deleteByIds">
+     delete from t_article where id in
+    <foreach item="item" index="index" collection="list"
+             open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+  <update id="updateList">
+    update t_article
+    set author = case id
+    <foreach item="item" index="index" collection="list"
+             open="" separator="" close="">
+      when #{item.id} then concat(author, id)
+    </foreach>
+    end,
+    info = case id
+    <foreach item="item" index="index" collection="list"
+             open="" separator="" close="">
+      when #{item.id} then concat(id, '-', now())
+    </foreach>
+    end
+    where info is null and id in
+    <foreach item="item" index="index" collection="list"
+             open="(" separator="," close=")">
+       #{item.id}
+    </foreach>
+  </update>
+</mapper>

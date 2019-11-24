@@ -17,6 +17,8 @@
 package com.scd.config;
 
 import com.scd.util.LookUpKeyUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -47,6 +49,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Component
 public class RoutingDataSourceComponent extends AbstractDataSource implements InitializingBean {
+	private static final Logger LOGGER = LoggerFactory.getLogger(RoutingDataSourceComponent.class);
 
 	@Nullable
 	private Map<Object, Object> targetDataSources;
@@ -229,7 +232,9 @@ public class RoutingDataSourceComponent extends AbstractDataSource implements In
 	protected DataSource determineTargetDataSource() {
 		Assert.notNull(this.resolvedDataSources, "DataSource router not initialized");
 		Object lookupKey = determineCurrentLookupKey();
+		LOGGER.info("current lookup key {}", lookupKey);
 		if (lookupKey == null){
+			LOGGER.info("use default target datasource");
 			return (DataSource) defaultTargetDataSource;
 		}
 		DataSource dataSource = this.resolvedDataSources.get(lookupKey);

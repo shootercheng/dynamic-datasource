@@ -60,3 +60,12 @@ create table t_task_param (
 insert into t_task_param(param_type, param_value) values('timetask','0/20 * * * * ?');
 update t_task_param set param_value = "0/20 * * * * ?" where id = 1;
 update t_task_param set param_value = "0 0/1 * * * ?" where id = 1;
+
+CREATE TABLE `t_article` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `title` varchar(50) DEFAULT NULL,
+  `author` varchar(20) DEFAULT NULL,
+  `content` json DEFAULT NULL,
+  `info` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
