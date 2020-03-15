@@ -3,6 +3,8 @@ package com.scd.mapper;
 
 import com.scd.model.po.TaskParam;
 
+import java.util.List;
+
 public interface TaskParamMapper {
 
     int deleteByPrimaryKey(Integer id);
@@ -16,4 +18,10 @@ public interface TaskParamMapper {
     int updateByPrimaryKeySelective(TaskParam record);
 
     int updateByPrimaryKey(TaskParam record);
+
+    List<TaskParam> selectAllTask();
+
+    List<String[]> selectArrRes();
+
+    int insertBatch(List<TaskParam> taskParamList);
 }

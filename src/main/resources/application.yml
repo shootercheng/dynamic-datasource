@@ -33,3 +33,6 @@ spring:
 
 mybatis:
     mapper-locations: mapper/**/*Mapper.xml
+
+file:
+  export-temp: export/temp

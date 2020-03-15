@@ -7,13 +7,23 @@
     <result column="param_value" jdbcType="VARCHAR" property="paramValue" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, param_type, param_value
+     id, param_type, param_value
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from t_task_param
     where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAllTask" resultType="com.scd.model.po.TaskParam">
+    select
+    <include refid="Base_Column_List" />
+    from t_task_param
+  </select>
+  <select id="selectArrRes" resultType="java.lang.String">
+    select
+    id
+    from t_task_param
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from t_task_param
@@ -68,4 +78,16 @@
       param_value = #{paramValue,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <insert id="insertBatch" parameterType="java.util.List">
+    insert into t_task_param (id, param_type, param_value
+      )
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+        (
+            #{item.id,jdbcType=INTEGER},
+            #{item.paramType,jdbcType=VARCHAR},
+            #{item.paramValue,jdbcType=VARCHAR}
+        )
+    </foreach>
+  </insert>
 </mapper>

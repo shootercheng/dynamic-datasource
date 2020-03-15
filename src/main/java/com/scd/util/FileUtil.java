@@ -86,7 +86,17 @@ public class FileUtil {
     			new FileOutputStream(filepath, append), encode));
     	bufferedWriter.write(content);
     	bufferedWriter.close();
-    }	
+    }
+
+    /**
+     * 写入文件不关闭文件流
+     * @param fileWriter
+     * @param content
+     */
+    public static void writeStrToFile(FileWriter fileWriter, String content) throws IOException {
+        fileWriter.write(content);
+        fileWriter.flush();
+    }
 
     /**
      * byte[] 数组写入文件

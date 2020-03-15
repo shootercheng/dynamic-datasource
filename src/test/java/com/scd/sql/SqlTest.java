@@ -1,6 +1,7 @@
 package com.scd.sql;
 
 import com.scd.mapper.TaskParamMapper;
+import com.scd.model.po.Article;
 import com.scd.model.po.TaskParam;
 import com.scd.model.po.UserRole;
 import org.apache.ibatis.io.Resources;
@@ -58,6 +59,23 @@ public class SqlTest {
         }
     }
 
+
+    @Test
+    public void selectTest() {
+        SqlSession session = sqlSessionFactory.openSession();
+        TaskParamMapper taskParamMapper = session.getMapper(TaskParamMapper.class);
+        List<TaskParam> taskParamList = taskParamMapper.selectAllTask();
+        System.out.println(taskParamList);
+    }
+
+    @Test
+    public void selectArrayResult() {
+        SqlSession session = sqlSessionFactory.openSession();
+        TaskParamMapper taskParamMapper = session.getMapper(TaskParamMapper.class);
+        List<String[]> arrayList = taskParamMapper.selectArrRes();
+        System.out.println(arrayList);
+    }
+
     @Test
     public void testMapper(){
         SqlSession session = sqlSessionFactory.openSession();
@@ -67,9 +85,25 @@ public class SqlTest {
         Integer id = taskParam.getId();
         TaskParam taskParamDb = taskParamMapper.selectByPrimaryKey(id);
         Assert.assertNotNull(taskParamDb);
+        session.commit();
         if (session != null){
             session.close();
         }
+    }
+
+    @Test
+    public void testInsertBatch() {
+        SqlSession session = sqlSessionFactory.openSession();
+        TaskParamMapper taskParamMapper = session.getMapper(TaskParamMapper.class);
+        List<TaskParam> taskParams = new ArrayList<>();
+        TaskParam taskParam = new TaskParam(null, "" + 8,"");
+        for (int i = 0;i < 10; i++) {
+            taskParam.setParamValue("" + i);
+            taskParams.add(taskParam);
+        }
+        taskParamMapper.insertBatch(taskParams);
+        session.commit();
+        session.close();
     }
 
     protected String removeBreakingWhitespace(String original) {
