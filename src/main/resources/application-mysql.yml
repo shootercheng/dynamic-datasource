@@ -1,0 +1,21 @@
+spring:
+    datasource:
+        default:
+            driverClassName: com.mysql.cj.jdbc.Driver
+            jdbcUrl: jdbc:mysql://localhost:3306/test1?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+            username: chengdu
+            password: chengdu
+        testds:
+            driverClassName: com.mysql.cj.jdbc.Driver
+            jdbcUrl: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+            username: chengdu
+            password: chengdu
+            template: test:db-code
+            dburl: test
+        devds:
+            driverClassName: com.mysql.cj.jdbc.Driver
+            jdbcUrl: jdbc:mysql://localhost:3306/dev?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+            username: chengdu
+            password: chengdu
+            template: dev:db-code
+            dburl: dev
