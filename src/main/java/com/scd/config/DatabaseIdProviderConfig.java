@@ -43,7 +43,7 @@ public class DatabaseIdProviderConfig implements DatabaseIdProvider {
                 }
             }
             // no match, return null
-            return null;
+            throw new IllegalArgumentException("unknown database product name " + productName);
         }
         return productName;
     }
