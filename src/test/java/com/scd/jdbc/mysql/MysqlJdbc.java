@@ -84,4 +84,37 @@ public class MysqlJdbc extends JdbcBaseTest {
             }
         }
     }
+
+    @Test
+    public void testRunSql() {
+        Connection connection = null;
+        try {
+            connection = createConnection(url, userName, password);
+            connection.setAutoCommit(false);
+            Statement statement = connection.createStatement();
+            statement.execute("DROP TABLE IF EXISTS `address_inf`;");
+            statement.execute(
+                    "CREATE TABLE `address_inf` (\n" +
+                    "  `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
+                    "  `addressDetail` varchar(20) DEFAULT NULL,\n" +
+                    "  PRIMARY KEY (`id`)\n" +
+                    ") ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;");
+            connection.commit();
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

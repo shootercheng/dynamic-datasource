@@ -2,13 +2,11 @@ package com.scd.jdbc;
 
 import com.scd.jdbc.task.SqlRunnerResult;
 import com.scd.jdbc.task.SqlRunnerTask;
-import com.scd.util.SqlRunner;
 import org.apache.ibatis.datasource.pooled.PooledDataSource;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.RuntimeSqlException;
 import org.apache.ibatis.jdbc.ScriptRunner;
-import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,13 +16,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.*;
+import java.util.regex.Pattern;
 
 /**
  * @author James
@@ -35,6 +33,8 @@ public class SqlRunnerTest {
     private static final String DB_NAME = "@#db_name#@";
 
     private ExecutorService threadPool = Executors.newFixedThreadPool(10);
+
+    private static final Pattern MYSQL_PATTERN = Pattern.compile("^delimiter\\s*(.*)", Pattern.CASE_INSENSITIVE);
 
     public static UnpooledDataSource createUnpooledDataSource(String resource) throws IOException {
         Properties props = Resources.getResourceAsProperties(resource);
@@ -89,6 +89,7 @@ public class SqlRunnerTest {
         runner.setStopOnError(true);
         runner.setLogWriter(null);
         runner.setErrorLogWriter(printWriter);
+        runner.setDefinedelimiterPattern(MYSQL_PATTERN);
         return runner;
     }
 
@@ -120,7 +121,28 @@ public class SqlRunnerTest {
             pooledDataSource = createDataSource(dbProPath);
             PrintWriter printWriter = new PrintWriter("sql.log");
             SqlRunner runner = createSqlRunner(pooledDataSource.getConnection(), printWriter);
-            String sqlTempPath = "sql/dbtest_template.sql";
+            String sqlTempPath = "sql/dump-test.sql";
+            runner.executeLineByLine(Resources.getResourceAsReader(sqlTempPath), DB_NAME, "test4");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (pooledDataSource != null) {
+                pooledDataSource.forceCloseAll();
+            }
+        }
+    }
+
+    @Test
+    public void testSqlRunnerWithComment() {
+        PooledDataSource pooledDataSource = null;
+        try {
+            String dbProPath = "sql/db.properties";
+            pooledDataSource = createDataSource(dbProPath);
+            PrintWriter printWriter = new PrintWriter("sql.log");
+            SqlRunner runner = createSqlRunner(pooledDataSource.getConnection(), printWriter);
+            String sqlTempPath = "sql/dump-test-comment.sql";
             runner.executeLineByLine(Resources.getResourceAsReader(sqlTempPath), DB_NAME, "test4");
         } catch (IOException e) {
             e.printStackTrace();
@@ -209,7 +231,7 @@ public class SqlRunnerTest {
                 SqlRunner runner = createSqlRunner(pooledDataSource.getConnection(), printWriter);
                 String sqlTempPath = "sql/dbtest_template.sql";
                 Future<SqlRunnerResult> sqlRunnerResultFuture = threadPool.submit(new SqlRunnerTask(runner, DB_NAME,
-                        dbName, printWriter, sqlTempPath));
+                        dbName, sqlTempPath));
                 futureList.add(sqlRunnerResultFuture);
             }
             for (Future<SqlRunnerResult> resultFuture : futureList) {

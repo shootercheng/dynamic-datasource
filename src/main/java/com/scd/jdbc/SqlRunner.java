@@ -1,4 +1,4 @@
-package com.scd.util;
+package com.scd.jdbc;
 
 import org.apache.ibatis.jdbc.RuntimeSqlException;
 
@@ -34,6 +34,8 @@ public class SqlRunner {
 
     private String delimiter = DEFAULT_DELIMITER;
     private boolean fullLineDelimiter;
+
+    private Pattern definedelimiterPattern;
 
     public SqlRunner(Connection connection) {
         this.connection = connection;
@@ -80,6 +82,10 @@ public class SqlRunner {
 
     public void setFullLineDelimiter(boolean fullLineDelimiter) {
         this.fullLineDelimiter = fullLineDelimiter;
+    }
+
+    public void setDefinedelimiterPattern(Pattern definedelimiterPattern) {
+        this.definedelimiterPattern = definedelimiterPattern;
     }
 
     public void runScript(Reader reader) {
@@ -152,6 +158,7 @@ public class SqlRunner {
             throw new RuntimeSqlException(message, e);
         } finally {
             rollbackConnection();
+            rollbackConnection();
         }
     }
 
@@ -205,14 +212,16 @@ public class SqlRunner {
 
     private void handleLine(StringBuilder command, String line) throws SQLException {
         String trimmedLine = line.trim();
-        if (lineIsComment(trimmedLine)) {
+        if (resetDelimiter(trimmedLine)) {
+            return ;
+        } else if (lineIsComment(trimmedLine)) {
             Matcher matcher = DELIMITER_PATTERN.matcher(trimmedLine);
             if (matcher.find()) {
                 delimiter = matcher.group(5);
             }
             println(trimmedLine);
         } else if (commandReadyToExecute(trimmedLine)) {
-            command.append(line.substring(0, line.lastIndexOf(delimiter)));
+            command.append(line);
             command.append(LINE_SEPARATOR);
             println(command);
             executeStatement(command.toString());
@@ -223,8 +232,17 @@ public class SqlRunner {
         }
     }
 
+    private boolean resetDelimiter(String trimmedLine) {
+        Matcher matcher = definedelimiterPattern.matcher(trimmedLine);
+        if (matcher.find()) {
+            delimiter = matcher.group(1);
+            return true;
+        }
+        return false;
+    }
+
     private boolean lineIsComment(String trimmedLine) {
-        return trimmedLine.startsWith("//") || trimmedLine.startsWith("--");
+        return trimmedLine.startsWith("//") || trimmedLine.startsWith("--") || trimmedLine.startsWith("/*");
     }
 
     private boolean commandReadyToExecute(String trimmedLine) {
@@ -321,6 +339,13 @@ public class SqlRunner {
         if (errorLogWriter != null) {
             errorLogWriter.println(o);
             errorLogWriter.flush();
+        }
+    }
+
+    public void returnConnToPool() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
         }
     }
 }

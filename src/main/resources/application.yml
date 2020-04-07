@@ -10,7 +10,7 @@ logging:
 
 spring:
     profiles:
-      active: pgsql
+      active: mysql
 
 
 mybatis:

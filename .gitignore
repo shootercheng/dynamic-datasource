@@ -31,3 +31,5 @@ build/
 .vscode/
 
 export/temp
+
+*.log
