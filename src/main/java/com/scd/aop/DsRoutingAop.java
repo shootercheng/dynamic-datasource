@@ -114,13 +114,12 @@ public class DsRoutingAop {
 
     @AfterReturning(value = "routePointcut()", returning = "object")
     public void doAfterReturn(Object object) {
-        LOGGER.info("execute result is {}",  object);
         LookUpKeyUtil.removeLookupKey();
     }
 
     @AfterThrowing(value = "routePointcut()", throwing = "throwable")
     public void doAfterThrow(Throwable throwable) {
-        LOGGER.error("datasource route aop error ", throwable);
+        LOGGER.error("execute error");
     }
 
     private String getRequestParam(String dsparam) {

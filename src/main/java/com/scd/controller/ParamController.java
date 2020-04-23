@@ -37,4 +37,9 @@ public class ParamController {
     public void testUser(@RequestBody TestUser testUser) {
         testUserMapper.insertSelective(testUser);
     }
+
+    @RequestMapping(value = "/test/provider", method = RequestMethod.POST)
+    public Integer testProviderUser(Integer id) {
+        return testUserMapper.selectCountUser(id);
+    }
 }

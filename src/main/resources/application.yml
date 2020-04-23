@@ -5,8 +5,7 @@ server:
       context-path: /datasource
 
 logging:
-  level:
-     ROOT: info
+  config: classpath:logback-boot.xml
 
 spring:
     profiles:
@@ -16,7 +15,7 @@ spring:
 mybatis:
     mapper-locations: mapper/**/*Mapper.xml
     configuration:
-      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+      log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
 
 file:
   export-temp: export/temp

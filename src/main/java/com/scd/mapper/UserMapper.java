@@ -1,8 +1,11 @@
 package com.scd.mapper;
 
 import com.scd.annotation.DataSourceRouting;
+import com.scd.mapper.provider.UserContextProvider;
 import com.scd.model.po.User;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectProvider;
 
 import java.util.List;
 
