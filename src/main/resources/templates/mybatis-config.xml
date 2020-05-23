@@ -44,6 +44,7 @@
         <mapper resource="mapper/TestMapper.xml"/>
         <mapper resource="mapper/UserMapper.xml"/>
         <!--<mapper resource="mapper/UserRoleMapper.xml" />-->
+        <mapper resource="mapper/TestUserMapper.xml"/>
     </mappers>
 
 </configuration>

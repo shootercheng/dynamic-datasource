@@ -7,6 +7,15 @@ public class TestUser {
 
     private String address;
 
+    public TestUser() {
+
+    }
+
+    public TestUser(String name, String address) {
+        this.name = name;
+        this.address = address;
+    }
+
     public Integer getId() {
         return id;
     }

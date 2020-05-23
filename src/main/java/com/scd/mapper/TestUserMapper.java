@@ -7,6 +7,8 @@ import com.scd.model.po.TestUser;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectProvider;
 
+import java.util.List;
+
 public interface TestUserMapper {
     int insert(TestUser record);
 
@@ -15,4 +17,6 @@ public interface TestUserMapper {
 
     @SelectProvider(type = UserContextProvider.class, method = "selectUserProvider")
     int selectCountUser(@Param("id") Integer id);
+
+    int insertUserList(List<TestUser> userList);
 }

@@ -43,4 +43,14 @@
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}
       )
   </insert>
+  <insert id="insertUserList" useGeneratedKeys="true" keyProperty="id">
+      insert into t_user (name, address)
+      values
+    <foreach collection="list" item="item" separator=",">
+       (
+         #{item.name},
+         #{item.address}
+       )
+    </foreach>
+  </insert>
 </mapper>

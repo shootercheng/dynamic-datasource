@@ -4,6 +4,7 @@ import com.scd.jdbc.JdbcBaseTest;
 import org.junit.Test;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -115,6 +116,23 @@ public class MysqlJdbc extends JdbcBaseTest {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @Test
+    public void testPreparedStatement() {
+        try (Connection connection = createConnection(url, userName, password)) {
+            connection.setAutoCommit(false);
+            String sql = "insert into t_user (name, address) values ( ?, ? ) , ( ?, ? )";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, "cd0");
+            preparedStatement.setString(2, "NY");
+            preparedStatement.setString(3, "cd1");
+            preparedStatement.setString(4, "NY");
+            preparedStatement.execute();
+            connection.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }
