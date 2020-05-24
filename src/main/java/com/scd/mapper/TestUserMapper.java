@@ -19,4 +19,6 @@ public interface TestUserMapper {
     int selectCountUser(@Param("id") Integer id);
 
     int insertUserList(List<TestUser> userList);
+
+    List<TestUser> selectUsers(List<Integer> ids);
 }

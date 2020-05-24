@@ -228,7 +228,7 @@ public class XMLMapperBuilderSql extends BaseBuilder {
         String javaType = parameterNode.getStringAttribute("javaType");
         String jdbcType = parameterNode.getStringAttribute("jdbcType");
         String resultMap = parameterNode.getStringAttribute("resultMap");
-        String mode = parameterNode.getStringAttribute("mode");
+        String mode = parameterNode.getStringAttribute("node");
         String typeHandler = parameterNode.getStringAttribute("typeHandler");
         Integer numericScale = parameterNode.getIntAttribute("numericScale");
         ParameterMode modeEnum = resolveParameterMode(mode);
