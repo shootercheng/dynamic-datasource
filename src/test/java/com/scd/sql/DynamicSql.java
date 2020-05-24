@@ -11,6 +11,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.parsing.XPathParser;
 import org.apache.ibatis.scripting.xmltags.DynamicContext;
+import org.apache.ibatis.scripting.xmltags.ExpressionEvaluator;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -24,6 +25,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
@@ -172,5 +174,26 @@ public class DynamicSql {
         } else {
             return object;
         }
+    }
+
+    private ExpressionEvaluator expressionEvaluator = new ExpressionEvaluator();
+
+    @Test
+    public void testIfTestOgnl() {
+        Map<String, Object> parameterObject = new HashMap<>();
+        String expression = " name != null and name != '' ";
+        parameterObject.put("name", "cd");
+        Assert.assertTrue(expressionEvaluator.evaluateBoolean(expression, parameterObject));
+        parameterObject.put("name", "");
+        Assert.assertFalse(expressionEvaluator.evaluateBoolean(expression, parameterObject));
+        String expressionOr = " name == 'James' or name == 'Sun' ";
+        parameterObject.put("name", "James");
+        Assert.assertTrue(expressionEvaluator.evaluateBoolean(expressionOr, parameterObject));
+        parameterObject.put("name", "Sun");
+        Assert.assertTrue(expressionEvaluator.evaluateBoolean(expressionOr, parameterObject));
+        parameterObject.put("name", " ");
+        Assert.assertFalse(expressionEvaluator.evaluateBoolean(expressionOr, parameterObject));
+        parameterObject.clear();
+        Assert.assertFalse(expressionEvaluator.evaluateBoolean(expressionOr, parameterObject));
     }
 }
