@@ -7,11 +7,14 @@ import com.scd.sql.ognl.OgnlDefineMap;
 import com.scd.sql.ognl.OgnlMemberAccess;
 import ognl.Ognl;
 import ognl.OgnlException;
+import org.apache.ibatis.executor.result.DefaultResultHandler;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.parsing.XPathParser;
 import org.apache.ibatis.scripting.xmltags.DynamicContext;
 import org.apache.ibatis.scripting.xmltags.ExpressionEvaluator;
+import org.apache.ibatis.session.ResultHandler;
+import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -195,5 +198,29 @@ public class DynamicSql {
         Assert.assertFalse(expressionEvaluator.evaluateBoolean(expressionOr, parameterObject));
         parameterObject.clear();
         Assert.assertFalse(expressionEvaluator.evaluateBoolean(expressionOr, parameterObject));
+    }
+
+    private static boolean isSpecialParameter(Class<?> clazz) {
+        return RowBounds.class.isAssignableFrom(clazz) || ResultHandler.class.isAssignableFrom(clazz);
+    }
+
+    @Test
+    public void testSpecialParam() {
+        Assert.assertTrue(isSpecialParameter(DefaultResultHandler.class));
+        Assert.assertTrue(isSpecialParameter(ResultHandler.class));
+        Assert.assertTrue(isSpecialParameter(RowBounds.class));
+    }
+
+    @Test
+    public void testSpecialParamResultHandler() {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            TestUserMapper testUserMapper = sqlSession.getMapper(TestUserMapper.class);
+            List<Integer> list = new ArrayList<>();
+            list.add(1);
+            list.add(2);
+            List<TestUser> userList = testUserMapper.selectResultHandler(list, new RowBounds(0, 1));
+            System.out.println(userList);
+            Assert.assertTrue(userList.size() <= 1);
+        }
     }
 }
