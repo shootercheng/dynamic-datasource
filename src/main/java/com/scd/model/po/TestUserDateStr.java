@@ -2,20 +2,23 @@ package com.scd.model.po;
 
 import java.time.LocalDateTime;
 
-public class TestUser {
+/**
+ * @author James
+ */
+public class TestUserDateStr {
     private Integer id;
 
     private String name;
 
     private String address;
 
-    private LocalDateTime createTime;
+    private String createTime;
 
-    public TestUser() {
+    public TestUserDateStr() {
 
     }
 
-    public TestUser(String name, String address) {
+    public TestUserDateStr(String name, String address) {
         this.name = name;
         this.address = address;
     }
@@ -44,20 +47,21 @@ public class TestUser {
         this.address = address == null ? null : address.trim();
     }
 
-    public LocalDateTime getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(LocalDateTime createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
     @Override
     public String toString() {
-        return "TestUser{" +
+        return "TestUserDateStr{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
+                ", createTime='" + createTime + '\'' +
                 '}';
     }
 }

@@ -2,6 +2,7 @@ package com.scd.sql;
 
 import com.scd.mapper.TestUserMapper;
 import com.scd.model.po.TestUser;
+import com.scd.model.po.TestUserDateStr;
 import com.scd.sql.ognl.OgnlClassResolver;
 import com.scd.sql.ognl.OgnlDefineMap;
 import com.scd.sql.ognl.OgnlMemberAccess;
@@ -26,8 +27,11 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +57,18 @@ public class DynamicSql {
             TestUserMapper testUserMapper = sqlSession.getMapper(TestUserMapper.class);
             List<TestUser> list = createList(10);
             int sum = testUserMapper.insertUserList(list);
+            sqlSession.commit();
+            Assert.assertEquals(10, sum);
+            Assert.assertTrue(list.get(0).getId() != null);
+        }
+    }
+
+    @Test
+    public void testListManyParamGenId() {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            TestUserMapper testUserMapper = sqlSession.getMapper(TestUserMapper.class);
+            List<TestUser> list = createList(10);
+            int sum = testUserMapper.insertUserListManyParam(list, "1");
             sqlSession.commit();
             Assert.assertEquals(10, sum);
             Assert.assertTrue(list.get(0).getId() != null);
@@ -221,6 +237,37 @@ public class DynamicSql {
             List<TestUser> userList = testUserMapper.selectResultHandler(list, new RowBounds(0, 1));
             System.out.println(userList);
             Assert.assertTrue(userList.size() <= 1);
+        }
+    }
+
+    @Test
+    public void testInsertUser() {
+        TestUser testUser = new TestUser();
+        testUser.setName("cd");
+        testUser.setAddress("cd");
+        testUser.setCreateTime(LocalDateTime.now());
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            TestUserMapper testUserMapper = sqlSession.getMapper(TestUserMapper.class);
+            testUserMapper.insertLocalDate(testUser);
+            sqlSession.commit();
+        }
+    }
+
+    @Test
+    public void testInsertUserParam() {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            TestUserMapper testUserMapper = sqlSession.getMapper(TestUserMapper.class);
+            testUserMapper.insertLocalDateParam("cd", "cd", new Date());
+            sqlSession.commit();
+        }
+    }
+
+    @Test
+    public void selectUser() {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            TestUserMapper testUserMapper = sqlSession.getMapper(TestUserMapper.class);
+            TestUserDateStr testUser = testUserMapper.selectUserById(87);
+            System.out.println(testUser);
         }
     }
 }

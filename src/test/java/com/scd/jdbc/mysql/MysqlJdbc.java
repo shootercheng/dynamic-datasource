@@ -135,4 +135,49 @@ public class MysqlJdbc extends JdbcBaseTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void testPreparedStatementWithKey() {
+        try (Connection connection = createConnection(url, userName, password)) {
+            connection.setAutoCommit(false);
+            String sql = "insert into t_user (name, address) values ( ?, ? ) , ( ?, ? )";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, "cd0");
+            preparedStatement.setString(2, "NY");
+            preparedStatement.setString(3, "cd1");
+            preparedStatement.setString(4, "NY");
+            preparedStatement.execute();
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            while (resultSet.next()) {
+//                Object id = resultSet.getObject("id");
+                Object id = resultSet.getObject(1);
+                System.out.println(id);
+            }
+            connection.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testPreparedStatementWithColumnKey() {
+        try (Connection connection = createConnection(url, userName, password)) {
+            connection.setAutoCommit(false);
+            String sql = "insert into t_user (name, address) values ( ?, ? ) , ( ?, ? )";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
+            preparedStatement.setString(1, "cd0");
+            preparedStatement.setString(2, "NY");
+            preparedStatement.setString(3, "cd1");
+            preparedStatement.setString(4, "NY");
+            preparedStatement.execute();
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            while (resultSet.next()) {
+                Integer id = resultSet.getInt(1);
+                System.out.println(id);
+            }
+            connection.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
