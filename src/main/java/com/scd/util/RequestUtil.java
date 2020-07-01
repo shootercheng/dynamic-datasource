@@ -13,6 +13,10 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class RequestUtil {
 
+    /**
+     * 返回值可能为 NULL
+     * @return
+     */
     public static HttpServletRequest getHttpRequest(){
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         if (requestAttributes == null) {
@@ -22,9 +26,6 @@ public class RequestUtil {
         if (requestAttributes instanceof ServletRequestAttributes){
             ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) requestAttributes;
             httpServletRequest = servletRequestAttributes.getRequest();
-        }
-        if (httpServletRequest == null) {
-            throw new NullPointerException("http servlet is null");
         }
         return httpServletRequest;
     }
