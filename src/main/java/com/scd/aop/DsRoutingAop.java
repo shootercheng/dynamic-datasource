@@ -3,6 +3,7 @@ package com.scd.aop;
 import com.scd.annotation.DataSourceRouting;
 import com.scd.config.DsConfig;
 import com.scd.config.DsInfo;
+import com.scd.config.ParamConfig;
 import com.scd.config.RoutingDataSourceComponent;
 import com.scd.exception.RouteDsException;
 import com.scd.util.InheritableHeaderValueUtil;
@@ -42,6 +43,9 @@ public class DsRoutingAop {
     private DsConfig dsConfig;
 
     @Autowired
+    private ParamConfig paramConfig;
+
+    @Autowired
     private RoutingDataSourceComponent dataSourceComponent;
 
     // @within TYPE
@@ -72,7 +76,7 @@ public class DsRoutingAop {
         }
         // 解析注解
         String dsname = dsRouter.dsname();
-        String dsparam = dsRouter.dsparam();
+        String dsparam = paramConfig.getDsRouterHederKey();
 
         // 开始路由
         // 路由信息
@@ -90,13 +94,8 @@ public class DsRoutingAop {
         Map<String, DsInfo> dsInfoMap = dsConfig.getDatasource();
         DsInfo dsInfo = dsInfoMap.get(dsname);
         String url = dsInfo.getJdbcUrl();
-        String template = dsInfo.getTemplate();
-        if (StringUtils.isEmpty(template)) {
-            throw new RouteDsException("datasource template dburl not configed");
-        }
         // 替换为路由库名
-        String rtkey = ":" + dsparam;
-        rtkey = template.replace(rtkey, rtParam);
+        String rtkey = dsInfo.getDburl() + rtParam;
         if (!dataSourceComponent.checkDataSourceExist(rtkey)) {
             // 替换为新的url
             url = url.replace(dsInfo.getDburl(), rtkey);

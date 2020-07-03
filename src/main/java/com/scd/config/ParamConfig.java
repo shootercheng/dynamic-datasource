@@ -14,4 +14,7 @@ public class ParamConfig {
 
     @Value("${file.export-temp:export-temp}")
     private String exportTempPath;
+
+    @Value("${header.database-key:db-code}")
+    private String dsRouterHederKey;
 }

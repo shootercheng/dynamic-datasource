@@ -11,8 +11,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface DataSourceRouting {
-
     String dsname() default "";
-
-    String dsparam() default "";
 }

@@ -1,5 +1,7 @@
 package com.scd.util;
 
+import com.alibaba.ttl.TransmittableThreadLocal;
+
 import java.util.Map;
 
 /**
@@ -7,7 +9,7 @@ import java.util.Map;
  * @date 2019/11/24
  */
 public class InheritableHeaderValueUtil {
-    private static ThreadLocal<Map<String, String>> headerMap = new InheritableThreadLocal<>();
+    private static ThreadLocal<Map<String, String>> headerMap = new TransmittableThreadLocal<>();
 
     public static ThreadLocal<Map<String, String>> getHeaderMap() {
         return headerMap;

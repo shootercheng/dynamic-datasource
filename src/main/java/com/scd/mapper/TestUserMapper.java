@@ -18,7 +18,7 @@ import java.util.List;
 public interface TestUserMapper {
     int insert(TestUser record);
 
-    @DataSourceRouting(dsname = "testds", dsparam = "db-code")
+    @DataSourceRouting(dsname = "testds")
     int insertSelective(TestUser record);
 
     @SelectProvider(type = UserContextProvider.class, method = "selectUserProvider")

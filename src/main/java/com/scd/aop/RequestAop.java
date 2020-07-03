@@ -1,10 +1,12 @@
 package com.scd.aop;
 
+import com.scd.config.ParamConfig;
 import com.scd.util.InheritableHeaderValueUtil;
 import com.scd.util.RequestUtil;
 import org.aspectj.lang.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +25,9 @@ import java.util.Map;
 public class RequestAop {
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestAop.class);
 
+    @Autowired
+    private ParamConfig paramConfig;
+
     // @within TYPE
     // @annotation METHOD
     @Pointcut(value = "@within(com.scd.annotation.InheritableRequest)||@annotation(com.scd.annotation.InheritableRequest)")
@@ -32,12 +37,9 @@ public class RequestAop {
     @Before(value = "requestPointcut()")
     public void doBefore() {
         HttpServletRequest httpServletRequest = RequestUtil.getHttpRequest();
-        Enumeration<String> enumerations = httpServletRequest.getHeaderNames();
         Map<String, String> map = new HashMap<>(16);
-        while (enumerations.hasMoreElements()){
-            String haderKey = enumerations.nextElement();
-            map.put(haderKey, httpServletRequest.getHeader(haderKey));
-        }
+        String dbHeaderKey = paramConfig.getDsRouterHederKey();
+        map.put(dbHeaderKey, httpServletRequest.getHeader(dbHeaderKey));
         LOGGER.info("transform request header to headervalue {}", map);
         InheritableHeaderValueUtil.setHeaderMap(map);
     }

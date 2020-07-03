@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-@DataSourceRouting(dsname = "testds", dsparam = "db-code")
+@DataSourceRouting(dsname = "testds")
 public interface ArticleMapper {
     int deleteByPrimaryKey(Long id);
 

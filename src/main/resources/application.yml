@@ -19,3 +19,14 @@ mybatis:
 
 file:
   export-temp: export/temp
+
+header:
+  database-key: db-code
+
+pool:
+  async:
+    corePoolSize: 5
+    maximumPoolSize: 8
+    keepAliveTime: 1
+    timeUnit: MINUTES
+    blockingQueue: 2000

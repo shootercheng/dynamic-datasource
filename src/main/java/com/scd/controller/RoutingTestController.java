@@ -6,6 +6,7 @@ import com.scd.mapper.UserMapper;
 import com.scd.model.po.Article;
 import com.scd.model.po.Test;
 import com.scd.model.po.User;
+import com.scd.pool.AsyncThreadPool;
 import com.scd.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +33,9 @@ public class RoutingTestController {
 
     @Autowired
     private ArticleService articleService;
+
+    @Autowired
+    private AsyncThreadPool asyncThreadPool;
 
     @RequestMapping(value = "/test/type", method = RequestMethod.POST)
     public List<User> getUsers(){
@@ -85,7 +89,7 @@ public class RoutingTestController {
     @RequestMapping(value = "test/update", method = RequestMethod.GET)
     @InheritableRequest
     public String updateArticle() {
-        CompletableFuture.runAsync(() -> articleService.updateArticle());
+        asyncThreadPool.execute(() -> articleService.updateArticle());
         System.out.println("running....");
         return "success";
     }

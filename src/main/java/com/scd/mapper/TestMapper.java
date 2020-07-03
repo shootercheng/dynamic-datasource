@@ -8,10 +8,10 @@ public interface TestMapper {
 
     int deleteByPrimaryKey(Long id);
 
-    @DataSourceRouting(dsname = "testds", dsparam = "db-code")
+    @DataSourceRouting(dsname = "testds")
     int insert(Test record);
 
-    @DataSourceRouting(dsname = "devds", dsparam = "db-code")
+    @DataSourceRouting(dsname = "devds")
     int insertSelective(Test record);
 
     Test selectByPrimaryKey(Long id);
