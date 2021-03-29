@@ -59,6 +59,19 @@ public class SqlTest {
         }
     }
 
+    public String getShortKey(String key) {
+        String shortKey = key;
+        if (key.contains(".")) {
+            shortKey = getShortName(key);
+        }
+        return shortKey;
+    }
+
+    private String getShortName(String key) {
+        String[] keyParts = key.split("\\.");
+        return keyParts[keyParts.length - 1];
+    }
+
 
     @Test
     public void selectTest() {

@@ -72,7 +72,7 @@ public class FileUtil {
         writer.flush();
         writer.close();
     }
-	
+    
     /**
      * 写入文件时指定编码
      * @param filepath
@@ -82,10 +82,10 @@ public class FileUtil {
      * @throws Exception
      */
     public static void writeBuffToFile(String filepath, String content, boolean append, String encode) throws Exception{
-    	BufferedWriter bufferedWriter = new BufferedWriter( new OutputStreamWriter(
-    			new FileOutputStream(filepath, append), encode));
-    	bufferedWriter.write(content);
-    	bufferedWriter.close();
+        BufferedWriter bufferedWriter = new BufferedWriter( new OutputStreamWriter(
+                new FileOutputStream(filepath, append), encode));
+        bufferedWriter.write(content);
+        bufferedWriter.close();
     }
 
     /**
@@ -243,53 +243,66 @@ public class FileUtil {
         }
     }
     
-    	/**
-	 * 删除文件
-	 * @param filepath
-	 */
-	public static void deleteFile(String filepath){
-		File file = new File(filepath);
-		if(file.exists()){
-			if(file.isDirectory()){
-				System.out.println("enter dir " + file.getPath());
-				File[] files = file.listFiles();
-				for(File f : files){
-					deleteFile(f.getAbsolutePath());
-				}
-			}else if(file.isFile()){
-				System.out.println("delete file :"+ file.getAbsolutePath());
-				file.delete();
-			}
-		}
-	}
-	
-	/**
-	 * 删除文件以及文件夹
-	 * @param filepath
-	 */
-	public static void deleteDirAndFile(String filepath){
-		File file = new File(filepath);
-		if(file.exists()){
-			if(file.isDirectory()){
-				System.out.println("enter dir " + file.getPath());
-				File[] files = file.listFiles();
-				for(File f : files){
-					deleteDirAndFile(f.getAbsolutePath());
-				}
-				if(file.delete()){
-					System.out.println("delete dir " + file.getAbsolutePath());
-				}
-			}else if(file.isFile()){
-				System.out.println("delete file :"+ file.getAbsolutePath());
-				file.delete();
-			}
-		}
-	}
-
-	public static void makedir(String dir){
-	    File file = new File(dir);
-	    if (!file.exists()){
-	        file.mkdirs();
+        /**
+     * 删除文件
+     * @param filepath
+     */
+    public static void deleteFile(String filepath){
+        File file = new File(filepath);
+        if(file.exists()){
+            if(file.isDirectory()){
+                System.out.println("enter dir " + file.getPath());
+                File[] files = file.listFiles();
+                for(File f : files){
+                    deleteFile(f.getAbsolutePath());
+                }
+            }else if(file.isFile()){
+                System.out.println("delete file :"+ file.getAbsolutePath());
+                file.delete();
+            }
         }
+    }
+    
+    /**
+     * 删除文件以及文件夹
+     * @param filepath
+     */
+    public static void deleteDirAndFile(String filepath){
+        File file = new File(filepath);
+        if(file.exists()){
+            if(file.isDirectory()){
+                System.out.println("enter dir " + file.getPath());
+                File[] files = file.listFiles();
+                for(File f : files){
+                    deleteDirAndFile(f.getAbsolutePath());
+                }
+                if(file.delete()){
+                    System.out.println("delete dir " + file.getAbsolutePath());
+                }
+            }else if(file.isFile()){
+                System.out.println("delete file :"+ file.getAbsolutePath());
+                file.delete();
+            }
+        }
+    }
+
+    public static void makedir(String dir){
+        File file = new File(dir);
+        if (!file.exists()){
+            file.mkdirs();
+        }
+    }
+
+    public static void main(String[] args) {
+        String inputPath = "E:\\Github\\Activiti";
+        List<String> filepaths = new ArrayList<>();
+        getFilePath(inputPath, filepaths);
+        filepaths.forEach(path -> {
+            if (path.endsWith(".iml")) {
+                File file = new File(path);
+                boolean delresult = file.delete();
+                System.out.println("delete " + path + " " + delresult);
+            }
+        });
     }
 }

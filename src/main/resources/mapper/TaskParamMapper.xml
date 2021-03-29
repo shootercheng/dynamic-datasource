@@ -9,13 +9,21 @@
   <sql id="Base_Column_List">
      id, param_type, param_value
   </sql>
+  <cache
+          type="com.scd.cache.MybatisRedisCache"
+          eviction="LRU"
+          flushInterval="6000000"
+          size="1024"
+          readOnly="false"
+  />
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from t_task_param
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <select id="selectAllTask" resultType="com.scd.model.po.TaskParam">
+  <select id="selectAllTask" useCache="true" resultType="com.scd.model.po.TaskParam">
     select
     <include refid="Base_Column_List" />
     from t_task_param
