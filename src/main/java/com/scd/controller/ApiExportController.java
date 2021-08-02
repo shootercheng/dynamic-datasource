@@ -26,7 +26,7 @@ public class ApiExportController {
     @Autowired
     private RequestMethodProvider requestMethodProvider;
 
-    @RequestMapping(value = "/export/all", method = RequestMethod.GET)
+    @RequestMapping(value = {"/export/all","/data/export"}, method = {RequestMethod.GET, RequestMethod.POST})
     public ExportResult exportAllApi(ExportType exportType) {
         ExportResult exportResult = new ExportResult();
         List<String> errorMsg = new ArrayList<>();

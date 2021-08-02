@@ -180,4 +180,47 @@ public class MysqlJdbc extends JdbcBaseTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void testTransaction() throws SQLException {
+        Connection connection = createConnection(url, userName, password);
+        try {
+            connection.setAutoCommit(false);
+            Statement statement = connection.createStatement();
+            String sqlUser = "insert into t_user(name, address) values (\'transaction\', \'cd\')";
+            statement.execute(sqlUser);
+            String sqlQuery = "select name from t_user where name = \'transaction\'";
+            ResultSet resultSet = statement.executeQuery(sqlQuery);
+            while (resultSet.next()) {
+                Object object = resultSet.getObject("name");
+                System.out.println(object);
+            }
+            String sqlTest = "insert into t_test(name) values (\'transaction\')";
+            statement.execute(sqlTest);
+            String testSqlQuery = "select name from t_test where name = \'transaction\'";
+            ResultSet resultTest = statement.executeQuery(testSqlQuery);
+            while (resultTest.next()) {
+                Object object = resultTest.getObject("name");
+                System.out.println(object);
+            }
+            int i = 1 / 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            connection.rollback();
+        }
+        // validate no data
+        Statement statement = connection.createStatement();
+        String sqlQuery = "select name from t_user where name = \'transaction\'";
+        ResultSet resultSet = statement.executeQuery(sqlQuery);
+        while (resultSet.next()) {
+            Object object = resultSet.getObject("name");
+            System.out.println(object);
+        }
+        String testSqlQuery = "select name from t_test where name = \'transaction\'";
+        ResultSet resultTest = statement.executeQuery(testSqlQuery);
+        while (resultTest.next()) {
+            Object object = resultSet.getObject("name");
+            System.out.println(object);
+        }
+    }
 }
