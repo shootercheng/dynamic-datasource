@@ -7,6 +7,8 @@ public class TaskParam {
 
     private String paramValue;
 
+    private String ids;
+
     public TaskParam(){}
 
     public TaskParam(Integer id, String paramType, String paramValue) {
@@ -37,5 +39,13 @@ public class TaskParam {
 
     public void setParamValue(String paramValue) {
         this.paramValue = paramValue == null ? null : paramValue.trim();
+    }
+
+    public String getIds() {
+        return ids;
+    }
+
+    public void setIds(String ids) {
+        this.ids = ids;
     }
 }

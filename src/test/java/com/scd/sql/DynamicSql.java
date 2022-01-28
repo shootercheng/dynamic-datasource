@@ -1,6 +1,7 @@
 package com.scd.sql;
 
 import com.scd.mapper.TestUserMapper;
+import com.scd.model.po.TaskParam;
 import com.scd.model.po.TestUser;
 import com.scd.model.po.TestUserDateStr;
 import com.scd.sql.ognl.OgnlClassResolver;
@@ -214,6 +215,18 @@ public class DynamicSql {
         Assert.assertFalse(expressionEvaluator.evaluateBoolean(expressionOr, parameterObject));
         parameterObject.clear();
         Assert.assertFalse(expressionEvaluator.evaluateBoolean(expressionOr, parameterObject));
+    }
+
+    /**
+     * org.apache.ibatis.scripting.xmltags.ForEachSqlNode
+     * <foreach></foreach>
+     */
+    @Test
+    public void testForEach() {
+        TaskParam taskParam = new TaskParam();
+        taskParam.setIds("1,2,3,4,5,6,7,8,9,10");
+        Iterable<?> iterable = expressionEvaluator.evaluateIterable("ids.split(',')", taskParam);
+        System.out.println(iterable);
     }
 
     private static boolean isSpecialParameter(Class<?> clazz) {

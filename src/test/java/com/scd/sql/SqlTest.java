@@ -4,6 +4,7 @@ import com.scd.mapper.TaskParamMapper;
 import com.scd.model.po.Article;
 import com.scd.model.po.TaskParam;
 import com.scd.model.po.UserRole;
+import ognl.OgnlRuntime;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
@@ -109,14 +110,26 @@ public class SqlTest {
         SqlSession session = sqlSessionFactory.openSession();
         TaskParamMapper taskParamMapper = session.getMapper(TaskParamMapper.class);
         List<TaskParam> taskParams = new ArrayList<>();
-        TaskParam taskParam = new TaskParam(null, "" + 8,"");
         for (int i = 0;i < 10; i++) {
+            TaskParam taskParam = new TaskParam(null, "" + i,"");
             taskParam.setParamValue("" + i);
             taskParams.add(taskParam);
         }
         taskParamMapper.insertBatch(taskParams);
         session.commit();
         session.close();
+    }
+
+
+    @Test
+    public void testSplitStr() {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
+            TaskParamMapper taskParamMapper = session.getMapper(TaskParamMapper.class);
+            TaskParam taskParam = new TaskParam();
+            taskParam.setIds("1,2,3,4,5,6");
+            List<TaskParam> taskParamList = taskParamMapper.selectByTaskParam(taskParam);
+            Assert.assertNotNull(taskParamList);
+        }
     }
 
     protected String removeBreakingWhitespace(String original) {

@@ -22,4 +22,12 @@ public class EdgeIdeaSetter {
     public void settPoint(String tPoint) {
         this.tPoint = tPoint;
     }
+
+    @Override
+    public String toString() {
+        return "EdgeIdeaSetter{" +
+                "sPoint='" + sPoint + '\'' +
+                ", tPoint='" + tPoint + '\'' +
+                '}';
+    }
 }

@@ -40,7 +40,7 @@
     </environments>
 
     <mappers>
-<!--        <mapper resource="mapper/TaskParamMapper.xml" />-->
+        <mapper resource="mapper/TaskParamMapper.xml" />
 <!--        <mapper resource="mapper/TestMapper.xml"/>-->
 <!--        <mapper resource="mapper/UserMapper.xml"/>-->
         <!--<mapper resource="mapper/UserRoleMapper.xml" />-->
