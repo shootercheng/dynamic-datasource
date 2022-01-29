@@ -98,13 +98,24 @@
         )
     </foreach>
   </insert>
-  <select id="selectByTaskParam" resultType="com.scd.mapper.TaskParamMapper">
+  <select id="selectByTaskParam" resultType="com.scd.model.po.TaskParam">
     select * from t_task_param
     <where>
       <if test="ids != null">
         and id in
-        <foreach collection="ids.split(',')" item="item" index="index" open="(" close=")">
+        <foreach collection="ids.split(',')" item="item" open="(" close=")" separator=",">
             #{item}
+        </foreach>
+      </if>
+    </where>
+  </select>
+  <select id="selectByTaskParamIdList" resultType="com.scd.model.po.TaskParam">
+    select * from t_task_param
+    <where>
+      <if test="idList != null">
+        and id in
+        <foreach collection="idList" item="item" index="index" open="(" close=")" separator=",">
+          #{item}
         </foreach>
       </if>
     </where>

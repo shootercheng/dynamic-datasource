@@ -1,5 +1,7 @@
 package com.scd.model.po;
 
+import java.util.List;
+
 public class TaskParam {
     private Integer id;
 
@@ -8,6 +10,8 @@ public class TaskParam {
     private String paramValue;
 
     private String ids;
+
+    private List<Integer> idList;
 
     public TaskParam(){}
 
@@ -47,5 +51,13 @@ public class TaskParam {
 
     public void setIds(String ids) {
         this.ids = ids;
+    }
+
+    public List<Integer> getIdList() {
+        return idList;
+    }
+
+    public void setIdList(List<Integer> idList) {
+        this.idList = idList;
     }
 }

@@ -26,4 +26,6 @@ public interface TaskParamMapper {
     int insertBatch(List<TaskParam> taskParamList);
 
     List<TaskParam> selectByTaskParam(TaskParam taskParam);
+
+    List<TaskParam> selectByTaskParamIdList(TaskParam taskParam);
 }

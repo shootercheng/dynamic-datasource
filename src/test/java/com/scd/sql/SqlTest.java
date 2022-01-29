@@ -132,6 +132,17 @@ public class SqlTest {
         }
     }
 
+    @Test
+    public void testIdList() {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
+            TaskParamMapper taskParamMapper = session.getMapper(TaskParamMapper.class);
+            TaskParam taskParam = new TaskParam();
+            taskParam.setIdList(Arrays.asList(1,2,3,4,5,6));
+            List<TaskParam> taskParamList = taskParamMapper.selectByTaskParamIdList(taskParam);
+            Assert.assertNotNull(taskParamList);
+        }
+    }
+
     protected String removeBreakingWhitespace(String original) {
         StringTokenizer whitespaceStripper = new StringTokenizer(original);
         StringBuilder builder = new StringBuilder();
